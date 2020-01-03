@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\dwive\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\dwive\\.nuget\\packages"
+    ]
+  }
+}
