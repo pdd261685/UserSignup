@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using UserSignup.Models;
+using UserSignup.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,6 +16,7 @@ namespace UserSignup.Controllers
         
         public IActionResult Index(string userName="User")
         {
+
             ViewBag.UserName = userName;
             return View();
         }
@@ -22,41 +24,26 @@ namespace UserSignup.Controllers
         
         public IActionResult Add()
         {
-            return View();
+            AddUserViewModel addUserViewModel = new AddUserViewModel();
+            return View(addUserViewModel);
         }
 
         
         [HttpPost]
-        public IActionResult Add(Users user,string vPassword)
+        public IActionResult Add(AddUserViewModel addUserViewModel)
         {
-            ViewBag.UserName = user.UserName;
-            ViewBag.Eamil = user.Email;
-            if (!String.IsNullOrEmpty(user.Password) && !String.IsNullOrEmpty(user.UserName) && !String.IsNullOrEmpty(user.Email))
+            if (ModelState.IsValid)
             {
-                
-                if (user.Password.Equals(vPassword))
+                Users newUser = new Users
                 {
-                    if (user.Password.Length > 8 && user.Password.Any(char.IsDigit))
-                    {
-                        return Redirect("Index?username=" + user.UserName);
-                    }
-                    else
-                    {
-                        ViewBag.error1 = "Password should contain a digit and should be 8 characters long";
-                    }
+                    UserName=addUserViewModel.UserName,
+                    Password=addUserViewModel.Password,
+                    Email=addUserViewModel.Email
+                };
 
-                }
-                else
-                {
-                    ViewBag.error2 = "Password and verify password don't match";
-                }
+                return Redirect("Index?username=" + newUser.UserName);
             }
-            else
-            {
-                ViewBag.error = "Empty fields";
-            }
-
-            return View();
+            return View(addUserViewModel);
         }
     }
 }
